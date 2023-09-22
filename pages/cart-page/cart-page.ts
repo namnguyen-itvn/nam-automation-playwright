@@ -15,6 +15,9 @@ export class CartPage extends BasePage {
 
   }
 
+
+
+  
   /* ============ Function =============== */
 
 
