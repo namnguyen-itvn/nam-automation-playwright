@@ -12,52 +12,45 @@ export class LoginPage extends BasePage {
   /* ============ Elements =============== */
 
   readonly loginElements = {
-    emailText: '[id="email"]',
+    userName: '[id="user-name"]',
     passwordText: '[id="password"]',
-    forgotPassword:'//a[@href="/forgot-password"]',
-    loginButton: '//button >> text=Login',
-    googleLoginButton: '//button[contains(text(),"Continue with ")]',
+    loginButton: '[id="login-button"]',
+    errorHandler: '//h3 [@data-test="error"]',
   }
 
   /* ============ Function =============== */
 
-  async login(email: string, password: string) {
-    const emailElement = await this.page.$(this.loginElements.emailText);
-    if (emailElement) {
-      await this.waitAndFill(this.loginElements.emailText, email);
-      await this.waitAndFill(this.loginElements.passwordText, password);
+  async login(userName: string, passWord: string) {
+    const usernameElement = await this.page.$(this.loginElements.userName);
+    if (usernameElement) {
+      await this.waitAndFill(this.loginElements.userName, userName);
+      await this.waitAndFill(this.loginElements.passwordText, passWord);
       await this.waitAndClick(this.loginElements.loginButton);
-      await this.verifyElementNotVisible(this.loginElements.loginButton);
     }
   }
 
   /* ============ Verification =============== */
   
   async verifyHeader() {
-    expect(this.page).toHaveTitle("Elfie Console")
+    expect(this.page).toHaveTitle("Swag Labs")
   }
 
-  async verifyEmailText() {
-    const getEmailText = await(this.getAttributeValue(this.loginElements.emailText,'placeholder'));
-    expect(await this.verifyElementVisible(this.loginElements.emailText));
-    expect(getEmailText).toBe('Email');
+  async verifyErrorHandlerWhenBlankUserName() {
+    const usernameElement = await this.page.$(this.loginElements.userName);
+    if (usernameElement) {
+      await this.waitAndClick(this.loginElements.loginButton);
+    }
+    const errorHandlerMessage = await(this.waitAndGetText(this.loginElements.userName));
+    expect(await this.verifyTextContent(errorHandlerMessage, "Epic sadface: Username is required"));
   }
 
-  async verifyPasswordText() {
-    const getPasswordText = await(this.getAttributeValue(this.loginElements.passwordText,'placeholder'));
-    expect(await this.verifyElementVisible(this.loginElements.passwordText));
-    expect(getPasswordText).toBe('Password');
-  }
-
-  async verifyLoginButton() {
-    const loginText = await(this.waitAndGetText(this.loginElements.loginButton));
-    expect(await this.verifyElementVisible(this.loginElements.loginButton));
-    expect(loginText).toBe('Login');
-  }
-
-  async verifyForgotPassword() {
-    const forgotPasswordText = await(this.waitAndGetText(this.loginElements.forgotPassword));
-    expect(await this.verifyElementVisible(this.loginElements.forgotPassword));
-    expect(forgotPasswordText).toBe('Forgot password?');
+  async verifyErrorHandlerWhenBlankPassword(userName: string) {
+    const usernameElement = await this.page.$(this.loginElements.userName);
+    if (usernameElement) {
+      await this.waitAndFill(this.loginElements.userName, userName);
+      await this.waitAndClick(this.loginElements.loginButton);
+    }
+    const errorHandlerMessage = await(this.waitAndGetText(this.loginElements.userName));
+    expect(await this.verifyTextContent(errorHandlerMessage, "Epic sadface: Password is required"));
   }
 }
