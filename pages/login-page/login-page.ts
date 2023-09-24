@@ -1,6 +1,5 @@
 import { expect, Locator, Page } from '@playwright/test';
 import { BasePage } from '../base-page';
-
 export class LoginPage extends BasePage {
   readonly page: Page;
 
@@ -33,6 +32,13 @@ export class LoginPage extends BasePage {
   
   async verifyHeader() {
     expect(this.page).toHaveTitle("Swag Labs")
+  }
+
+  async verifyLoginForm() {
+    await this.page.waitForTimeout(2000);
+    await this.verifyElementVisible(this.loginElements.userName);
+    await this.verifyElementVisible(this.loginElements.passwordText);
+    await this.verifyElementVisible(this.loginElements.loginButton);
   }
 
   async verifyErrorHandlerWhenBlankUserName() {
