@@ -1,6 +1,6 @@
-Title
+This is Demo for playwright
 ===
-Abstract:xxx
+
 ## Papar Information
 - Title:  `Harry - Nam Nguyen`
 - Authors:  `Harry`
@@ -10,9 +10,10 @@ Abstract:xxx
 - Install: - npm install
 
 ## Use
+  ```
 - to run full test on local: npx playwright test
   ```
-  to run a sing test file: npx playwright test login-page.spec.ts
+  to run a single test file: npx playwright test login-page.spec.ts
   ```
 - to run in debug mode: npx playwright test --debug
   ```
