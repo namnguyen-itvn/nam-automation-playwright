@@ -1,4 +1,7 @@
 import { expect, Locator, Page } from "@playwright/test";
+
+
+const BaseUrl = "https://www.saucedemo.com/";
 export class BasePage {
   readonly page: Page;
 
