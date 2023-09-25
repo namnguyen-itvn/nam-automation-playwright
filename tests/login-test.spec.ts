@@ -5,7 +5,7 @@ import { ProductPage } from '../pages/product-page/product-page';
 const loginData: any = loginTestData();
 
 test.beforeAll(async ({ browser }) => {
-    const page = await browser.newPage();
+    //TBD
 });
 
 test('Login page - Suite - Verify Sauce demo login page', async ({ browser }) => {

@@ -1,7 +1,7 @@
 import { expect, Locator, Page } from '@playwright/test';
 import { BasePage } from '../base-page';
 
-const BASEURL = "https://www.saucedemo.com/";
+const product = 'Sauce Labs Backpack'
 export class ProductPage extends BasePage {
   readonly page: Page;
 
@@ -23,6 +23,14 @@ export class ProductPage extends BasePage {
     subMenuResetAppState: '[id="reset_sidebar_link"]',
   }
 
+  readonly productDetailPage = {
+    addToCart: '[id="add-to-cart-sauce-labs-backpack"]',
+    productPrice: '//div[@class="inventory_details_price"]',
+    removeButton: '[id="remove-sauce-labs-backpack"]',
+    cartIcon: '[id="shopping_cart_container"] a',
+    cartNumberProductAdded: '[id="shopping_cart_container"] span',
+  }
+
   /* ============ Function =============== */
 
   async openHamburgerMenu() {
@@ -32,13 +40,28 @@ export class ProductPage extends BasePage {
 
   async clickLogout() {
     await this.openHamburgerMenu();
-      await this.waitAndClick(this.productPageElement.subMenuLogout);
-    }
+    await this.waitAndClick(this.productPageElement.subMenuLogout);
+  }
 
-    async navigateToProducPage() {
-        await this.navigateTo("https://www.saucedemo.com/inventory.html");
-    }
+  async navigateToProductPage() {
+    await this.navigateTo("https://www.saucedemo.com/inventory.html");
+  }
+  
+  async addProductByText(){
+    await this.clickItemByText(product)
+  }
 
+  async getProductPrice(){
+    await this.waitAndGetText(this.productDetailPage.productPrice);
+  }
+
+  async clickOnAddToCart(){
+    await this.waitAndClick(this.productDetailPage.addToCart);
+  }
+
+  async clickOnCartIcon(){
+    await this.waitAndClick(this.productDetailPage.cartIcon);
+  }
   /* ============ Verification =============== */
   
   async verifyHamburgerMenuIsVisible() {
@@ -58,5 +81,18 @@ export class ProductPage extends BasePage {
     await this.clickLogout();
   }
 
+  async verifyRemoveButtonDisabled() {
+    await this.page.waitForTimeout(500);
+    await this.verifyElementDisabled(this.productDetailPage.removeButton);
+  }
 
+  async verifyRemoveButtonEnabled() {
+    await this.page.waitForTimeout(500);
+    await this.verifyElementVisible(this.productDetailPage.removeButton);
+  }
+
+  async verifyCartIncreased(text: string){
+    const productNumberIncreased = await this.waitAndGetText(this.productDetailPage.cartNumberProductAdded);
+    await expect(productNumberIncreased).toEqual(text);
+  }
 }
